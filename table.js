@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $.ajax({
-        url: 'mod_table.csv',
+        url: 'mod_table2.csv',
         dataType: 'text',
     }).done(successFunction);
 });
