@@ -17,7 +17,7 @@ function successFunction(data) {
         tableRow.append('<td>' + category + '</td>');
         for (var rowCell = 4; rowCell < rowCells.length; rowCell++) {
             if (rowCell === rowCells.length - 1) {
-                tableRow.append('<td><a href="' + rowCells[rowCell] + '"><img src="link_icon.png" alt="Link"></a></td>');
+                tableRow.append('<td><a href="' + rowCells[rowCell] + '"><img src="link_icon.png" target="_blank" alt="Link"></a></td>');
             } else {
                 tableRow.append('<td>' + rowCells[rowCell] + '</td>');
             }
