@@ -7,7 +7,7 @@ $(document).ready(function() {
 
 function successFunction(data) {
     var allRows = data.split(/\r?\n|\r/);
-    for (var singleRow = 0; singleRow < allRows.length; singleRow++) {
+    for (var singleRow = 1; singleRow < allRows.length; singleRow++) {
         var rowCells = allRows[singleRow].split(',');
         var tableRow = $('<tr>');
         var category = rowCells[0];
