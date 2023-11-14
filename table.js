@@ -1,39 +1,42 @@
-$(document).ready(function() {
-    $.ajax({
-        url: 'mod_table2.csv',
-        dataType: 'text',
-    }).done(successFunction);
+var data = [];
+Papa.parse('mod_table2.csv', {
+    download: true,
+    header: true,
+    dynamicTyping: true,
+    chunk: function(results) {
+        data = data.concat(results.data);
+        if (data.length >= 1000) { // Change this to the number of rows you want to display at a time
+            displayData();
+            data = [];
+        }
+    },
+    complete: function() {
+        displayData();
+    }
 });
 
-function successFunction(data) {
-    var allRows = data.split(/\r?\n|\r/);
-    for (var singleRow = 1; singleRow < allRows.length; singleRow++) {
-        var rowCells = allRows[singleRow].split(',');
-        var tableRow = $('<tr>');
-        var category = rowCells[0];
-        if (rowCells[0] === 'Multiple_groups') {
-            category += ', ' + rowCells[1] + ', ' + rowCells[2] + ', ' + rowCells[3];
+function displayData() {
+    var table = $('#myTable').DataTable();
+    for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        var category = row['Factor_category'];
+        if (row['Factor_category'] === 'Multiple_groups') {
+            category += ', ' + row['Multiple_cat1'] + ', ' + row['Multiple_cat2'] + ', ' + row['Multiple_cat3'];
         }
-        tableRow.append('<td>' + category + '</td>');
-        for (var rowCell = 4; rowCell < rowCells.length; rowCell++) {
-            if (rowCell === rowCells.length - 1) {
-                tableRow.append('<td><a href="' + rowCells[rowCell] + '"><img src="link_icon.png" target="_blank" alt="Link"></a></td>');
-            } else {
-                tableRow.append('<td>' + rowCells[rowCell] + '</td>');
-            }
-        }
-        $('tbody').append(tableRow);
+        table.row.add([
+            category,
+            row['Factor_more_refined'],
+            row['Factor_refined'],
+            row['Clock_C'],
+            row['N total'],
+            row['Tissue_category'],
+            row['Race_Ethnicity'],
+            row['Sex'],
+            row['Twin_study'],
+            row['Cohort_C'],
+            '<a href="' + row['Link'] + '"><img src="link_icon.png" alt="Link"></a>',
+            row['Extra Column']
+        ]);
     }
-
-    $('#myTable').DataTable({
-        "pageLength": 10,
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        "stripeClasses": [],
-        "order": [[ 0, "asc" ]],
-        "columnDefs": [
-            { "orderable": false, "targets": 10 },
-            { "type": "num", "targets": 3 },
-            { "type": "num", "targets": 4 }
-        ]
-    });
+    table.draw();
 }
