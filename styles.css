@@ -12,6 +12,13 @@
     pointer-events: all;
 }
 
+.highlight {
+    background-color: #ADD8E6; /* Light Blue */
+}
+
+.table-active, .table-active > td {
+    background-color: rgba(0, 255, 255, 0.1) !important;
+}
 /*table.dataTable thead .sorting::before,
 table.dataTable thead .sorting::after,
 table.dataTable thead .sorting_asc::before,

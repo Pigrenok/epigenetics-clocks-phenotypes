@@ -184,3 +184,26 @@ function displayData() {
     }
     table.draw();
 }
+
+$(document).ready(function() {
+    var table = $('#myTable').DataTable();
+
+    // Handle mouseover and mouseout events
+    // $('#myTable tbody').on('mouseover', 'tr', function() {
+    //     $(this).css('background-color', '#ff0000'); // Change to your preferred color
+    // });
+
+    // $('#myTable tbody').on('mouseout', 'tr', function() {
+    //     $(this).css('background-color', '');
+    // });
+
+    // Handle click event
+    $('#myTable tbody').on('click', 'tr', function() {
+        if ($(this).hasClass('table-active')) {
+            $(this).removeClass('table-active');
+        } else {
+            // table.$('tr.table-active').removeClass('table-active');
+            $(this).addClass('table-active');
+        }
+    });
+});
