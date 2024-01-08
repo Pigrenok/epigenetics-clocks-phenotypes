@@ -1,8 +1,8 @@
-#myTable tbody tr:nth-child(even) {
+/*#myTable tbody tr:nth-child(even) {
     background-color: #f2f2f2;
-}
-#myTable tbody tr:hover {
-    background-color: darkcyan;
+}*/
+#myTable tbody tr:hover td {
+    background-color: rgba(0, 255, 255, 0.1);
 }
 
 .dropdown-menu {
