@@ -84,7 +84,7 @@ function initFilters(api) {
         .appendTo(nTotalColumn.header());
         
 
-    minInput.on('change', function (event) {
+    minInput.on('input', function (event) {
             event.stopPropagation();
             table.draw();    
         })
@@ -92,7 +92,7 @@ function initFilters(api) {
             event.stopPropagation();
         });
 
-    maxInput.on('change', function (event) {
+    maxInput.on('input', function (event) {
             event.stopPropagation();
             table.draw();
 
