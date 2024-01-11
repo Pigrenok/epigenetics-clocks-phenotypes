@@ -10,16 +10,47 @@ var table = $('#myTable').DataTable(
 // }
 );
 
+function filterColumn0(menu,column) {
+    var checkedValues = menu.find('input[type=checkbox].form-check-input:checked').map(function () {
+        return this.value;
+    }).get();
+    
+    var isAny = $('#allAnySwitch').prop('checked')
+
+    if (isAny) {
+        var search = checkedValues.length > 0 ? checkedValues.join('|') : '';
+    } else {
+        var search = checkedValues.length > 0 ? checkedValues.map(term => '(?=.*' + term + ')').join('') + '.*' : '';    
+    }
+    
+    column.search(search, true, false).draw();
+}
+
 function initFilters(api) {
     api.columns([0, 1, 2, 3, 5]).every(function () {
         var column = this;
         var columnIndex = column.index();
         var dropdown = $('<div class="dropdown"></div>').appendTo($(column.header()));
-        var button = $('<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>')
+        var button = $('<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true"></button>')
             .appendTo(dropdown);
         var menu = $('<ul class="dropdown-menu"></ul>').appendTo(dropdown);
+        
 
         if (columnIndex === 0) {
+            var item = $('<li class="mx-auto p-2"></li>').appendTo(menu)
+            var slidingSwitch = $('<input type="checkbox" id="allAnySwitch" data-toggle="toggle" data-onlabel="ANY" data-offlabel="ALL">')
+                                .appendTo(item);
+            slidingSwitch.on('change',function() {
+                filterColumn0(menu,column)
+            });
+            // // slidingSwitch.on('change', function (event) {
+            // //     event.stopPropagation();
+            // // });
+            // // slidingSwitch.on('click', function (event) {
+            // //   event.stopPropagation();
+            // // });
+            slidingSwitch.bootstrapToggle();
+
             var allCategories = [];
             column.data().each(function (d, j) {
                 var categories = d.split(', ');
@@ -30,22 +61,21 @@ function initFilters(api) {
                     }
                 }
             });
-
+            
+            $('<div class="dropdown-divider"></div>').appendTo(menu);
+            
             allCategories.sort().forEach(function (d, j) {
-                var item = $('<li class="dropdown-item"></li>').appendTo(menu);
+                var itemli = $('<li class="mx-auto px-2"></li>').appendTo(menu);
+                var item = $('<div class="form-group"></div>').appendTo(itemli);
                 var checkbox = $('<input class="form-check-input me-2" type="checkbox" value="' + d + '">').appendTo(item);
-                var label = $('<label></label>').text(d).appendTo(item);
+                var label = $('<label class="form-check-label"></label>').text(d).appendTo(item);
                 checkbox.on('change', function () {
-                    var checkedValues = menu.find('input:checked').map(function () {
-                        return this.value;
-                    }).get();
-                    var search = checkedValues.length > 0 ? checkedValues.join(' ') : '';
-                    column.search(search, true, false).draw();
+                    filterColumn0(menu,column);
                 });
             });
         } else {
             column.data().unique().sort().each(function (d, j) {
-                var item = $('<li class="dropdown-item"></li>').appendTo(menu);
+                var item = $('<div class="form-group"></div>').appendTo(menu);
                 var checkbox = $('<input class="form-check-input me-2" type="checkbox" value="' + d + '">').appendTo(item);
                 var label = $('<label></label>').text(d).appendTo(item);
 
@@ -60,12 +90,25 @@ function initFilters(api) {
         }
 
 
+        // menu.appendTo(menudiv);
         
-
+        // menudiv.on('click', function (event) {
+        //     event.stopPropagation();
+        // });
         dropdown.on('click', function (event) {
             event.stopPropagation();
         });
+        // dropdown.on('change', '#allAnySwitch', function (event) {
+        //     event.stopPropagation();
+        // });
 
+        // if (columnIndex === 0) {
+        //     var slidingSwitch = $('<input type="checkbox" id="allAnySwitch" class="dropdown-item" data-toggle="toggle" data-onlabel="ANY" data-offlabel="ALL">').appendTo(menudiv);
+        //     slidingSwitch.on('change', function (event) {
+        //         event.stopPropagation();
+        //     });
+        //     slidingSwitch.bootstrapToggle();
+        // }
         var resetButton = $('<button class="btn btn-secondary btn-sm">Reset</button>')
         .appendTo($(column.header()))
         .on('click', function () {
@@ -188,16 +231,7 @@ function displayData() {
 $(document).ready(function() {
     var table = $('#myTable').DataTable();
 
-    // Handle mouseover and mouseout events
-    // $('#myTable tbody').on('mouseover', 'tr', function() {
-    //     $(this).css('background-color', '#ff0000'); // Change to your preferred color
-    // });
-
-    // $('#myTable tbody').on('mouseout', 'tr', function() {
-    //     $(this).css('background-color', '');
-    // });
-
-    // Handle click event
+    // Handle click event on rows to de/highlight them
     $('#myTable tbody').on('click', 'tr', function() {
         if ($(this).hasClass('table-active')) {
             $(this).removeClass('table-active');

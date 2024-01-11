@@ -5,15 +5,15 @@
     background-color: rgba(0, 255, 255, 0.1);
 }
 
-.dropdown-menu {
+/*.dropdown-menu {
     pointer-events: none;
+}*/
+
+.dropdown-menu {
+    width: max-content;
 }
 .dropdown-item {
     pointer-events: all;
-}
-
-.highlight {
-    background-color: #ADD8E6; /* Light Blue */
 }
 
 .table-active, .table-active > td {
