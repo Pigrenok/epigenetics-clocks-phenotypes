@@ -182,7 +182,7 @@ function initFilters(api) {
 // }
 
 var data = [];
-Papa.parse('mod_table2.csv', {
+Papa.parse('data_for_web_table.csv', {
     download: true,
     header: true,
     dynamicTyping: true,
@@ -216,7 +216,7 @@ function displayData() {
             row['Factor_refined'],
             row['Clock_C'],
             row['N total'],
-            row['Tissue_category'],
+            row['Tissue_C'],
             row['Race_Ethnicity'],
             row['Sex'],
             row['Twin_study'],
