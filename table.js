@@ -162,7 +162,6 @@ function initFilters(api) {
             return false;
         }
     );
-
     var resetButton = $('<button class="btn btn-primary">Reset All Filters</button>')
         .prependTo('#myTable_wrapper')
         .on('click', function () {
@@ -173,6 +172,9 @@ function initFilters(api) {
             });
             // filterNtotal(api);
         });
+
+    
+
 }
 
 // function filterNtotal(api) {
