@@ -45,4 +45,4 @@ The raw data is available in the [csv]
 
 The code for interactive table implementation is licenced under BSD 3-clause licence
 
-The data itself is share under [CC-BY-4.0 ![CC-BY-4.0](https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png)](https://creativecommons.org/licenses/by/4.0/)
+The data itself is share under [CC-BY-4.0 <img src="https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png" alt="CC-BY-4.0" width="88" height="31">](https://creativecommons.org/licenses/by/4.0/)
