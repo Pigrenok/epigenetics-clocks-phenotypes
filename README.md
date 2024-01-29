@@ -2,7 +2,7 @@
 
 ## Access to the tool
 
-This tool is available [here](!!!ADDLINK!!!).
+This tool is available at [https://pigrenok.github.io/epigenetics-clocks-phenotypes/](https://pigrenok.github.io/epigenetics-clocks-phenotypes/).
 
 ### Local running
 
@@ -12,8 +12,8 @@ You need to have [docker](https://www.docker.com/) running on your computer.
 
 Then you need to clone this repository (require Internet access):
 ```bash
-git clone !!!repo address!!!
-cd !!!REPO NAME!!!
+git clone https://github.com/Pigrenok/epigenetics-clocks-phenotypes.git
+cd epigenetics-clocks-phenotypes
 ```
 
 Then in Linux you just need to run 
