@@ -221,7 +221,7 @@ function displayData() {
             row['Sex'],
             row['Twin_study'],
             row['Cohort_C'],
-            '<a href="' + row['Link'] + '"><img src="link_icon.png" alt="Link"></a>',
+            '<a href="' + row['Link'] + '" target="_blank"><i class="bi bi-box-arrow-up-right">Paper</i></a>',
             row['Extra Column']
         ]);
     }
