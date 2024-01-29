@@ -18,9 +18,9 @@ function filterColumn0(menu,column) {
     var isAny = $('#allAnySwitch').prop('checked')
 
     if (isAny) {
-        var search = checkedValues.length > 0 ? checkedValues.join('|') : '';
+        var search = checkedValues.length > 0 ? '\\b' + checkedValues.join('\\b|\\b') + '\\b': '';
     } else {
-        var search = checkedValues.length > 0 ? checkedValues.map(term => '(?=.*' + term + ')').join('') + '.*' : '';    
+        var search = checkedValues.length > 0 ? checkedValues.map(term => '(?=.*\\b' + term + '\\b)').join('') + '.*' : '';    
     }
     
     column.search(search, true, false).draw();
