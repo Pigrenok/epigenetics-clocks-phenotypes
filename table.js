@@ -11,6 +11,11 @@ var table = $('#myTable').DataTable(
 );
 
 function filterColumn0(menu,column) {
+    if (menu==undefined) {
+        column.search('', true, false).draw()
+        return;
+    }
+
     var checkedValues = menu.find('input[type=checkbox].form-check-input:checked').map(function () {
         return this.value;
     }).get();
@@ -165,12 +170,23 @@ function initFilters(api) {
     var resetButton = $('<button class="btn btn-primary">Reset All Filters</button>')
         .prependTo('#myTable_wrapper')
         .on('click', function () {
+            // api.columns().every(function () {
+            //     var column = this;
+            //     $(column.header()).find('input[type="checkbox"]').prop('checked', false).trigger('change');
+            //     $(column.header()).find('input[type="number"]').val('');
+            // });
+            // Suppress the redraw
+            // var draw = false;
+
             api.columns().every(function () {
                 var column = this;
-                $(column.header()).find('input[type="checkbox"]').prop('checked', false).trigger('change');
+                $(column.header()).find('input[type="checkbox"]').prop('checked', false);
                 $(column.header()).find('input[type="number"]').val('');
+                filterColumn0(undefined,column)
             });
-            // filterNtotal(api);
+
+            // Manually trigger a single redraw after all filters have been cleared
+            // api.draw(draw);
         });
 
     
