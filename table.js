@@ -117,9 +117,11 @@ function initFilters(api) {
         var resetButton = $('<button class="btn btn-secondary btn-sm">Reset</button>')
         .appendTo($(column.header()))
         .on('click', function () {
-            $(column.header()).find('input[type="checkbox"]').prop('checked', false).trigger('change');
+            event.stopPropagation();
+            $(column.header()).find('input[type="checkbox"]').prop('checked', false);//.trigger('change');
             $(column.header()).find('input[type="number"]').val('');
             // filterNtotal(api);
+            filterColumn0(undefined,column);
         });
     });
 
