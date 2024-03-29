@@ -183,12 +183,24 @@ function initFilters(api) {
 
     // Add min/max inputs for the 'N total' column
     var nTotalColumn = api.column(5);
-    var minInput = $('<input type="number" placeholder="Min" style="width: 60px;">')
-        .appendTo(nTotalColumn.header());
-        
+    var headerCell = $(nTotalColumn.header());
+
+    // Create a container for the header text and input fields
+    var headerContainer = $('<div>').css('display', 'flex').css('align-items', 'center');
+
+    // Append the original header text to the container
+    headerContainer.append($('<span>').text(headerCell.text()).css('margin-right', '10px'));
+
+    // Create and append the minInput field to the container
+    var minInput = $('<input type="number" placeholder="Min" style="width: 60px; margin-right: 5px;">')
+        .appendTo(headerContainer);
+
+    // Create and append the maxInput field to the container
     var maxInput = $('<input type="number" placeholder="Max" style="width: 60px;">')
-        .appendTo(nTotalColumn.header());
-        
+        .appendTo(headerContainer);
+
+    // Clear the header cell and append the container
+    headerCell.html('').append(headerContainer);
 
     minInput.on('input', function (event) {
             event.stopPropagation();
