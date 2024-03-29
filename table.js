@@ -70,7 +70,10 @@ function initFilters(api) {
     api.columns([0, 1, 2, 3, 4, 6]).every(function () {
         var column = this;
         var columnIndex = column.index();
-        var dropdown = $('<div class="dropdown"></div>').appendTo($(column.header()));
+        var dropdown = $('<span class="dropdown"></span>').appendTo($(column.header()));
+        dropdown.css({
+            'margin-left': '5px'
+        })
         var button = $('<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true"></button>')
             .appendTo(dropdown);
         var menu = $('<ul class="dropdown-menu"></ul>').appendTo(dropdown);
@@ -174,7 +177,8 @@ function initFilters(api) {
         //     });
         //     slidingSwitch.bootstrapToggle();
         // }
-        
+        // var headerText = $(column.header()).text();
+        // $(column.header()).html('').append(dropdown).append($('<span>').text(headerText));
     });
 
     // Add min/max inputs for the 'N total' column
@@ -245,7 +249,7 @@ function initFilters(api) {
             // api.draw(draw);
         });
 
-    
+       
 
 }
 
