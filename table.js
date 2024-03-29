@@ -10,7 +10,7 @@ var table = $('#myTable').DataTable(
 // }
 );
 
-function filterColumn0(menu,column) {
+function filterColumn1(menu,column) {
     if (menu==undefined) {
         column.search('', true, false).draw()
         return;
@@ -31,22 +31,62 @@ function filterColumn0(menu,column) {
     column.search(search, true, false).draw();
 }
 
+function disableCheckboxes(api, columnIndex) {
+    var filteredData = api.rows({ search: 'applied' }).data();
+    var columnData;
+    if (columnIndex === 1) {
+        columnData = getCategories(filteredData.pluck(columnIndex));
+    } else {
+        columnData = filteredData.pluck(columnIndex).unique();    
+    }
+    var columnFilter = $(api.column(columnIndex).header()).find('input[type="checkbox"]');
+    columnFilter.each(function () {
+        if (this.id !== "allAnySwitch") {
+            if (columnData.indexOf(this.value) === -1) {
+                $(this).prop('disabled', true);
+            } else {
+                $(this).prop('disabled', false);
+            }
+        }
+    });
+}
+
+function getCategories(array) {
+    var allCategories = [];
+    array.each(function (d, j) {
+        var categories = d.split(', ');
+        for (var i = 0; i < categories.length; i++) {
+            var category = categories[i].trim();
+            if (allCategories.indexOf(category) === -1) {
+                allCategories.push(category);
+            }
+        }
+    });
+
+    return allCategories;
+}
+
 function initFilters(api) {
-    api.columns([0, 1, 2, 3, 5]).every(function () {
+    api.columns([0, 1, 2, 3, 4, 6]).every(function () {
         var column = this;
         var columnIndex = column.index();
         var dropdown = $('<div class="dropdown"></div>').appendTo($(column.header()));
         var button = $('<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true"></button>')
             .appendTo(dropdown);
         var menu = $('<ul class="dropdown-menu"></ul>').appendTo(dropdown);
-        
+        menu.css({
+            'max-height': 'calc(80vh - ' + $(column.header()).offset().top + 'px)',
+            'overflow-y': 'auto'
+        });
 
-        if (columnIndex === 0) {
+        if (columnIndex === 1) {
             var item = $('<li class="mx-auto p-2"></li>').appendTo(menu)
             var slidingSwitch = $('<input type="checkbox" id="allAnySwitch" data-toggle="toggle" data-onlabel="ANY" data-offlabel="ALL">')
                                 .appendTo(item);
             slidingSwitch.on('change',function() {
-                filterColumn0(menu,column)
+                filterColumn1(menu,column)
+                disableCheckboxes(api, 2);
+                disableCheckboxes(api, 3);
             });
             // // slidingSwitch.on('change', function (event) {
             // //     event.stopPropagation();
@@ -56,16 +96,7 @@ function initFilters(api) {
             // // });
             slidingSwitch.bootstrapToggle();
 
-            var allCategories = [];
-            column.data().each(function (d, j) {
-                var categories = d.split(', ');
-                for (var i = 0; i < categories.length; i++) {
-                    var category = categories[i].trim();
-                    if (allCategories.indexOf(category) === -1) {
-                        allCategories.push(category);
-                    }
-                }
-            });
+            let allCategories = getCategories(column.data());
             
             $('<div class="dropdown-divider"></div>').appendTo(menu);
             
@@ -75,14 +106,16 @@ function initFilters(api) {
                 var checkbox = $('<input class="form-check-input me-2" type="checkbox" value="' + d + '">').appendTo(item);
                 var label = $('<label class="form-check-label"></label>').text(d).appendTo(item);
                 checkbox.on('change', function () {
-                    filterColumn0(menu,column);
+                    filterColumn1(menu,column);
+                    disableCheckboxes(api, 2);
+                    disableCheckboxes(api, 3);
                 });
             });
         } else {
             column.data().unique().sort().each(function (d, j) {
                 var item = $('<div class="form-group"></div>').appendTo(menu);
                 var checkbox = $('<input class="form-check-input me-2" type="checkbox" value="' + d + '">').appendTo(item);
-                var label = $('<label></label>').text(d).appendTo(item);
+                var label = $('<label class="form-check-label"></label>').text(d).appendTo(item);
 
                 checkbox.on('change', function () {
                     var checkedValues = menu.find('input:checked').map(function () {
@@ -90,6 +123,15 @@ function initFilters(api) {
                     }).get();
                     var search = checkedValues.length > 0 ? '^' + checkedValues.join('$|^') + '$' : '';
                     column.search(search, true, false).draw();
+                    if (columnIndex === 0) {
+                        disableCheckboxes(api, 1);
+                        disableCheckboxes(api, 2);
+                        disableCheckboxes(api, 3);
+                    }
+
+                    if (columnIndex === 2) {
+                        disableCheckboxes(api, 3);
+                    }
                 });
             });    
         }
@@ -121,12 +163,12 @@ function initFilters(api) {
             $(column.header()).find('input[type="checkbox"]').prop('checked', false);//.trigger('change');
             $(column.header()).find('input[type="number"]').val('');
             // filterNtotal(api);
-            filterColumn0(undefined,column);
+            filterColumn1(undefined,column);
         });
     });
 
     // Add min/max inputs for the 'N total' column
-    var nTotalColumn = api.column(4);
+    var nTotalColumn = api.column(5);
     var minInput = $('<input type="number" placeholder="Min" style="width: 60px;">')
         .appendTo(nTotalColumn.header());
         
@@ -155,7 +197,7 @@ function initFilters(api) {
         function (settings, data, dataIndex) {
             let min = parseInt(minInput.val(), 10);
             let max = parseInt(maxInput.val(), 10);
-            let nTotal = parseFloat(data[4]) || 0; // use data for the age column
+            let nTotal = parseFloat(data[5]) || 0; // use data for the age column
          
             if (
                 (isNaN(min) && isNaN(max)) ||
@@ -184,9 +226,11 @@ function initFilters(api) {
                 var column = this;
                 $(column.header()).find('input[type="checkbox"]').prop('checked', false);
                 $(column.header()).find('input[type="number"]').val('');
-                filterColumn0(undefined,column)
+                filterColumn1(undefined,column)
             });
-
+            disableCheckboxes(api,1);
+            disableCheckboxes(api,2);
+            disableCheckboxes(api,3);
             // Manually trigger a single redraw after all filters have been cleared
             // api.draw(draw);
         });
@@ -224,23 +268,24 @@ function displayData() {
     
     for (var i = 0; i < data.length; i++) {
         var row = data[i];
-        var category = row['Factor_category'];
-        if (row['Factor_category'] === 'Multiple_groups') {
+        var category = row['Factor category'];
+        if (row['Factor category'] === 'Multiple_groups') {
             category = [row['Multiple_cat1'], row['Multiple_cat2'], row['Multiple_cat3']]
                 .filter(Boolean)
                 .join(', ');
         }
         table.row.add([
+            row['Topic'],
             category,
-            row['Factor_more_refined'],
-            row['Factor_refined'],
-            row['Clock_C'],
+            row['Factor group'],
+            row['Factor'],
+            row['Clock'],
             row['N total'],
-            row['Tissue_C'],
+            row['Tissue'],
             row['Race_Ethnicity'],
             row['Sex'],
             row['Twin_study'],
-            row['Cohort_C'],
+            row['Cohort'],
             '<a href="' + row['Link'] + '" target="_blank"><i class="bi bi-box-arrow-up-right">Paper</i></a>',
             row['Extra Column']
         ]);
