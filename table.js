@@ -79,6 +79,24 @@ function initFilters(api) {
             'overflow-y': 'auto'
         });
 
+        var resetButton = $('<button class="btn btn-secondary btn-sm">Reset</button>')
+        .appendTo($('<li class="mx-auto p-2"></li>').appendTo(menu))
+        .on('click', function () {
+            event.stopPropagation();
+            $(column.header()).find('input[type="checkbox"]').prop('checked', false);//.trigger('change');
+            $(column.header()).find('input[type="number"]').val('');
+            // filterNtotal(api);
+            filterColumn1(undefined,column);
+            if (columnIndex<3) {
+                for (var i=columnIndex+1; i<=3; i++) {
+                    disableCheckboxes(api,i)
+                }
+            }
+        });
+
+        // Add a divider after the Reset button
+        $('<div class="dropdown-divider"></div>').appendTo(menu);
+
         if (columnIndex === 1) {
             var item = $('<li class="mx-auto p-2"></li>').appendTo(menu)
             var slidingSwitch = $('<input type="checkbox" id="allAnySwitch" data-toggle="toggle" data-onlabel="ANY" data-offlabel="ALL">')
@@ -156,15 +174,7 @@ function initFilters(api) {
         //     });
         //     slidingSwitch.bootstrapToggle();
         // }
-        var resetButton = $('<button class="btn btn-secondary btn-sm">Reset</button>')
-        .appendTo($(column.header()))
-        .on('click', function () {
-            event.stopPropagation();
-            $(column.header()).find('input[type="checkbox"]').prop('checked', false);//.trigger('change');
-            $(column.header()).find('input[type="number"]').val('');
-            // filterNtotal(api);
-            filterColumn1(undefined,column);
-        });
+        
     });
 
     // Add min/max inputs for the 'N total' column
