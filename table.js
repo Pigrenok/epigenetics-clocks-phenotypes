@@ -19,6 +19,20 @@ function escapeSymbols(array) {
 
     return escapedArray;
 }
+
+function caseInsensitiveSort(a, b) {
+  const lowercaseA = a.toLowerCase();
+  const lowercaseB = b.toLowerCase();
+
+  if (lowercaseA < lowercaseB) {
+    return -1;
+  }
+  if (lowercaseA > lowercaseB) {
+    return 1;
+  }
+  return 0;
+}
+
 function filterColumn1(menu,column) {
     if (menu==undefined) {
         column.search('', true, false).draw()
@@ -130,7 +144,7 @@ function initFilters(api) {
             
             $('<div class="dropdown-divider"></div>').appendTo(menu);
             
-            allCategories.sort().forEach(function (d, j) {
+            allCategories.sort(caseInsensitiveSort).forEach(function (d, j) {
                 var itemli = $('<li class="mx-auto px-2"></li>').appendTo(menu);
                 var item = $('<div class="form-group"></div>').appendTo(itemli);
                 var checkbox = $('<input class="form-check-input me-2" type="checkbox" value="' + d + '">').appendTo(item);
@@ -142,7 +156,7 @@ function initFilters(api) {
                 });
             });
         } else {
-            column.data().unique().sort().each(function (d, j) {
+            column.data().unique().sort(caseInsensitiveSort).each(function (d, j) {
                 var item = $('<div class="form-group"></div>').appendTo(menu);
                 var checkbox = $('<input class="form-check-input me-2" type="checkbox" value="' + d + '">').appendTo(item);
                 var label = $('<label class="form-check-label"></label>').text(d).appendTo(item);
