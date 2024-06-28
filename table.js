@@ -10,6 +10,15 @@ var table = $('#myTable').DataTable(
 // }
 );
 
+function escapeSymbols(array) {
+
+    const symbols = ["(", ")", "+", ".", "*", "?", "[", "]", "{", "}", "^", "$", "|"];
+    const specialCharRegex = new RegExp(`[${symbols.join("\\")}]`, "g");
+
+    const escapedArray = array.map(str => str.replace(specialCharRegex, "\\$&"));
+
+    return escapedArray;
+}
 function filterColumn1(menu,column) {
     if (menu==undefined) {
         column.search('', true, false).draw()
@@ -23,9 +32,9 @@ function filterColumn1(menu,column) {
     var isAny = $('#allAnySwitch').prop('checked')
 
     if (isAny) {
-        var search = checkedValues.length > 0 ? '\\b' + checkedValues.join('\\b|\\b') + '\\b': '';
+        var search = checkedValues.length > 0 ? '\\b' + escapeSymbols(checkedValues).join('\\b|\\b') + '\\b': '';
     } else {
-        var search = checkedValues.length > 0 ? checkedValues.map(term => '(?=.*\\b' + term + '\\b)').join('') + '.*' : '';    
+        var search = checkedValues.length > 0 ? escapeSymbols(checkedValues).map(term => '(?=.*\\b' + term + '\\b)').join('') + '.*' : '';    
     }
     
     column.search(search, true, false).draw();
@@ -142,7 +151,7 @@ function initFilters(api) {
                     var checkedValues = menu.find('input:checked').map(function () {
                         return this.value;
                     }).get();
-                    var search = checkedValues.length > 0 ? '^' + checkedValues.join('$|^') + '$' : '';
+                    var search = checkedValues.length > 0 ? '^' + escapeSymbols(checkedValues).join('$|^') + '$' : '';
                     column.search(search, true, false).draw();
                     if (columnIndex === 0) {
                         disableCheckboxes(api, 1);
